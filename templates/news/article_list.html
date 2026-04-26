@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <h1>Наукові новини</h1>
+
+    <a href="{% url 'article_create' %}">[+] Додати нову статтю</a>
+    <hr />
+
+    <ul>
+      {% for article in articles %}
+      <li>
+        <a href="{% url 'article_detail' article.id %}">{{ article.title }}</a>
+        <br />
+        <small>Категорія: {{ article.category.name }}</small>
+      </li>
+      <br />
+      {% endfor %}
+    </ul>
+  </body>
+</html>
