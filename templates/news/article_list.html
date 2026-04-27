@@ -4,6 +4,24 @@
     <title>{{ title }}</title>
   </head>
   <body>
+    <div>
+      {% if user.is_authenticated %}
+      <span>Привіт, {{ user.username }}!</span>
+      <form
+        action="{% url 'accounts:logout' %}"
+        method="post"
+        style="display: inline"
+      >
+        {% csrf_token %}
+        <button type="submit">Вийти</button>
+      </form>
+      {% else %}
+      <a href="{% url 'accounts:login' %}">[Увійти]</a> |
+      <a href="{% url 'accounts:register' %}">[Зареєструватися]</a>
+      {% endif %}
+    </div>
+    <hr />
+
     <h1>Наукові новини</h1>
 
     <a href="{% url 'article_create' %}">[+] Додати нову статтю</a>
