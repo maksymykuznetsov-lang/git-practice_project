@@ -24,7 +24,18 @@
 
     <h1>Наукові новини</h1>
 
+    {% if user.is_authenticated %}
     <a href="{% url 'article_create' %}">[+] Додати нову статтю</a>
+    <br /><br />
+    {% endif %}
+
+    <div style="background-color: #f1f1f1; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+      <strong>Фільтр за категоріями:</strong>
+      <a href="{% url 'article_list' %}">Всі новини</a> |
+      {% for cat in categories %}
+          <a href="?category={{ cat.id }}">{{ cat.name }}</a> |
+      {% endfor %}
+    </div>
     <hr />
 
     <ul>

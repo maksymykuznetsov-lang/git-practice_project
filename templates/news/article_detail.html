@@ -11,10 +11,66 @@
     <p><strong>Категорія:</strong> {{ article.category.name }}</p>
     <p><strong>Дата публікації:</strong> {{ article.created_at }}</p>
 
+    <p>
+      <strong>Автор:</strong> {% if article.author %}{{ article.author.username }}{% else %}Анонім{% endif %}
+    </p>
+
+    {% if article.image %}
+    <img src="{{ article.image.url }}" width="300" alt="Фото до новини" />
+    <br /><br />
+    {% endif %} {% if article.files.all %}
+    <hr />
+    <h3>Прикріплені файли:</h3>
+    <ul>
+      {% for f in article.files.all %}
+      <li>
+        <a href="{{ f.file.url }}" download>Завантажити файл</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
     <p>{{ article.content }}</p>
 
+    {% if user.is_authenticated and user == article.author %}
     <hr />
+    <p><em>Управління статтею:</em></p>
     <a href="{% url 'article_update' article.id %}">[Редагувати]</a> |
     <a href="{% url 'article_delete' article.id %}">[Видалити]</a>
+    {% endif %}
+
+    <hr />
+    <h2>Коментарі:</h2>
+
+    {% if user.is_authenticated %}
+    <form method="POST" style="margin-bottom: 20px">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Відправити коментар</button>
+    </form>
+    {% else %}
+    <p>
+      <em
+        >Щоб залишити коментар, будь ласка,
+        <a href="{% url 'login' %}">увійдіть</a>.</em
+      >
+    </p>
+    {% endif %}
+
+    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px">
+      {% for comment in comments %}
+      <div
+        style="
+          border-bottom: 1px solid #ddd;
+          margin-bottom: 10px;
+          padding-bottom: 10px;
+        "
+      >
+        <strong>{{ comment.author_name }}</strong> сказав ({{ comment.created_at|date:"d M Y H:i" }}):
+        <p>{{ comment.text }}</p>
+      </div>
+      {% empty %}
+      <p>Ще немає коментарів. Будьте першим!</p>
+      {% endfor %}
+    </div>
   </body>
 </html>
